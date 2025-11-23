@@ -35,14 +35,6 @@ app.add_middleware(
 )
 
 
-class Item(BaseModel):
-    # Przykładowy model przedmiotu — nieużywany w frontendzie TOO DO,
-    # ale pozostawiony jako demonstracja jak działa Pydantic/Model.
-    id: int | None = None
-    name: str
-    description: str | None = None
-    price: float
-
 
 class Task(BaseModel):
     # Reprezentacja zadania (Task) — to, co zapisujemy w pliku JSON.
@@ -69,9 +61,9 @@ class TaskUpdate(BaseModel):
     completed: bool | None = None
 
 
-# Prosty in-memory store for przykładowych przedmiotów (nieużywane przez frontend)
-items: Dict[int, Item] = {}
-next_id = 1
+# (Usunięto przykładowe endpointy `items` i związane zmienne – nie były
+# potrzebne dla frontendu. Wszystkie operacje na zadaniach wykonujemy na
+# pliku JSON `data/tasks.json`.)
 
 
 @app.get("/")
@@ -97,32 +89,7 @@ def health_check():
 
 
 # --- Proste API "items" (in-memory) - używane w testach
-@app.post("/items/", status_code=201)
-def create_item(item: Item):
-    """Utwórz przykładowy item w pamięci (tylko do testów).
-    Przypisuje kolejny id i zapisuje w słowniku `items`.
-    """
-    global next_id
-    # Pydantic model można zamienić na dict, ale prostsze jest przypisanie id
-    item.id = next_id
-    items[next_id] = item
-    next_id += 1
-    return item
 
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int):
-    """Zwraca pojedynczy item lub 404 jeśli nie istnieje."""
-    it = items.get(item_id)
-    if not it:
-        raise HTTPException(status_code=404, detail="Item not found")
-    return it
-
-
-@app.get("/items/")
-def list_items():
-    """Zwraca listę wszystkich itemów (służy do testów)."""
-    return list(items.values())
 
 # --- Tasks backed by a JSON file ---
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

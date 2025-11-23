@@ -16,18 +16,6 @@ def test_health():
     assert r.json() == {"status": "ok"}
 
 
-def test_create_and_get_item():
-    payload = {"name": "Test", "description": "abc", "price": 9.99}
-    r = client.post("/items/", json=payload)
-    assert r.status_code == 201
-    data = r.json()
-    assert data["id"] == 1
-    assert data["name"] == "Test"
-
-    r2 = client.get(f"/items/{data['id']}")
-    assert r2.status_code == 200
-    assert r2.json()["name"] == "Test"
-
 
 def test_tasks_crud(tmp_path):
     # ensure a clean tasks file for the test

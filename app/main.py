@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -273,3 +273,18 @@ def update_task(task_id: int, task: TaskUpdate):
 # - Można wysłać tylko pola, które chcemy zmienić (title, description, completed)
 # - Jeśli pole 'completed' zmienia się z False na True, ustawiamy 'completed_at'
 # - Jeśli zmienia się z True na False, usuwamy datę 'completed_at'
+
+@app.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_task(task_id: int):
+    """
+    Usuwa zadanie o podanym ID.
+    - Jeśli zadanie istnieje, zostaje usunięte i zwracamy 204 No Content.
+    - Jeśli nie istnieje, zwracamy 404.
+    """
+    tasks = _load_tasks_raw()
+    for i, t in enumerate(tasks):
+        if t.get("id") == task_id:
+            tasks.pop(i)
+            _save_tasks_raw(tasks)
+            return  # 204 No Content
+    raise HTTPException(status_code=404, detail="Task not found")

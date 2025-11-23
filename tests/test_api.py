@@ -118,3 +118,23 @@ def test_update_task_no_changes():
     updated = r2.json()
     assert updated["title"] == "T1"  # unchanged
     assert updated["description"] == "d"
+
+def test_delete_task_success():
+    # utwórz zadanie
+    r = client.post("/tasks", json={"title": "T1", "description": "d"})
+    created = r.json()
+
+    # usuń zadanie
+    r2 = client.delete(f"/tasks/{created['id']}")
+    assert r2.status_code == 204
+
+    # sprawdź, że nie ma go na liście
+    r3 = client.get("/tasks")
+    tasks = r3.json()
+    assert all(t["id"] != created["id"] for t in tasks)
+
+
+def test_delete_task_not_found():
+    r = client.delete("/tasks/999")
+    assert r.status_code == 404
+    assert r.json()["detail"] == "Task not found"

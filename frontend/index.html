@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TOO DO Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>TOO DO Manager</h1>
+      <p class="subtitle">Prosty menedżer zadań (FastAPI backend)</p>
+    </header>
+
+    <section class="add">
+      <input id="title" placeholder="Tytuł zadania" />
+      <input id="description" placeholder="Opis (opcjonalnie)" />
+      <button id="addBtn">Dodaj zadanie</button>
+    </section>
+
+    <section class="filters">
+      <input id="filterQ" placeholder="Szukaj (tytuł/opis)" />
+      <select id="filterCompleted">
+        <option value="all">Wszystkie</option>
+        <option value="active">Aktywne</option>
+        <option value="completed">Ukończone</option>
+      </select>
+    </section>
+
+    <section>
+      <ul id="tasks" class="tasks"></ul>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -59,3 +59,8 @@ def test_update_task():
     updated = r2.json()
     assert updated["title"] == "T1-mod"
     assert updated["completed"] is True  # jednoznaczne sprawdzenie
+
+def test_create_task_too_long_title():
+    payload = {"title": "X" * 100, "description": "ok"}  # 100 znaków
+    r = client.post("/tasks", json=payload)
+    assert r.status_code == 422  # powinien zwrócić błąd walidacji

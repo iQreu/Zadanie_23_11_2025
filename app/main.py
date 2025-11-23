@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime, timezone
 from typing import Dict
 import os
@@ -46,8 +46,8 @@ class Task(BaseModel):
     # - created_at: data utworzenia (format ISO8601 UTC)
     # - completed_at: data oznaczenia jako ukończone (ISO8601 UTC) lub None
     id: int | None = None
-    title: str
-    description: str | None = None
+    title: str = Field(..., max_length=50)        # np. max 50 znaków
+    description: str = Field(..., max_length=200)
     completed: bool = False
     created_at: str | None = None
     completed_at: str | None = None
